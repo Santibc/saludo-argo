@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diplomado-saludo
+  labels:
+    app: diplomado-saludo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: diplomado-saludo
+  template:
+    metadata:
+      labels:
+        app: diplomado-saludo
+    spec:
+      containers:
+      - name: diplomado-saludo
+        image: santiagobc1/diplomado-saludo:2.0.1
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "300Mi"
+          limits:
+            cpu: "300m"
+            memory: "1Gi"
+        startupProbe:
+          httpGet:          # Tipo de sonda - HTTP GET
+            path: "/saludo" # Ruta URL a la que se enviará la solicitud
+            port: 8080      # Puerto en el que se escuchará
+          initialDelaySeconds: 10  # Espera inicial de 10 segundos antes de la primera comprobación
+          periodSeconds: 5         # Intervalo de 5 segundos entre comprobaciones
+        readinessProbe:
+          httpGet:
+            path: "/saludo_ruso" # Ruta URL a la que se enviará la solicitud
+            port: 8080      # Puerto en el que se escuchará
+          periodSeconds: 5         # Intervalo de 5 segundos entre comprobaciones

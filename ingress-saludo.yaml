@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: diplomado-saludo
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx # Asegúrate de que este sea el nombre de tu Ingress controller
+  rules:
+  - http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: /dominio_principal(/|$)(.*)
+        backend:
+          service:
+            name: diplomado-saludo # Asegúrate de que este sea el nombre de tu servicio backend
+            port:
+              number: 80
